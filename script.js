@@ -1,8 +1,6 @@
-// Blog yazılarını yüklemek için script
 document.addEventListener("DOMContentLoaded", () => {
     const postsContainer = document.getElementById("blog-posts");
 
-    // post.json dosyasından yazıları yükle
     fetch("post/posts.json")
         .then(response => {
             if (!response.ok) {
@@ -20,6 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p>${post.content}</p>
                 `;
                 postsContainer.appendChild(postElement);
+
+                // Örnek: Slug ile detay sayfasına bağlantı ekleme
+                const link = document.createElement("a");
+                link.href = `post/${post.slug}.html`;
+                link.textContent = "Devamını Oku";
+                postElement.appendChild(link);
             });
         })
         .catch(error => {
