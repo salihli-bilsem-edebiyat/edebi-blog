@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Öğrenci Yazıları Blogu</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <header>
@@ -12,9 +13,23 @@
         <p>Edebiyatın büyülü dünyasına hoş geldiniz!</p>
     </header>
     <main>
-        <section id="blog-posts">
-            <!-- Blog yazıları dinamik olarak buraya yüklenecek -->
-        </section>
+        <div class="container">
+            <!-- Sağdaki küçük alan: Blog listesi -->
+            <aside id="blog-list">
+                <h2>Bloglar</h2>
+                <ul id="blog-links">
+                    <!-- Blog bağlantıları dinamik olarak buraya eklenecek -->
+                </ul>
+            </aside>
+
+            <!-- Soldaki büyük alan: Seçilen yazı -->
+            <section id="blog-content">
+                <!-- Varsayılan olarak en son eklenen yazı burada görüntülenecek -->
+                <article id="content">
+                    <p>Yükleniyor...</p>
+                </article>
+            </section>
+        </div>
     </main>
     <footer>
         <p>© 2025 Öğrenci Yazıları Blogu | Tüm Hakları Saklıdır</p>
