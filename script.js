@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadPosts() {
         try {
             // 1. posts.json'ı çek
-            const response = await fetch('posts.json');
+            const response = await fetch('post/posts.json');
             const posts = await response.json();
 
             // 2. Tarihe göre sırala (En yeni en üstte)
