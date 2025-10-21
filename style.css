@@ -1,8 +1,8 @@
 /* GENEL STİLLER */
 :root {
-    --primary-color: #6d4c41; /* Koyu Kahverengi */
+    --primary-color: #6d4c41; /* Koyu Kahverengi (Başlıklar, Aktif Vurgu) */
     --secondary-color: #ffb74d; /* Turuncu Vurgu */
-    --background-light: #f5f5f5; /* Açık Gri Arka Plan */
+    --background-light: #f5f5f5; 
     --text-dark: #212121;
     --text-light: #757575;
     --card-bg: #ffffff;
@@ -13,7 +13,7 @@ body {
     background-color: var(--background-light);
     color: var(--text-dark);
     margin: 0;
-    line-height: 1.7; /* Okuma kolaylığı için satır aralığı */
+    line-height: 1.7; 
 }
 
 h1, h2, h3, h4 {
@@ -22,7 +22,7 @@ h1, h2, h3, h4 {
     line-height: 1.2;
 }
 
-/* HEADER - Üst kısım */
+/* HEADER */
 .header {
     background-color: var(--primary-color);
     padding: 15px 0;
@@ -36,46 +36,37 @@ h1, h2, h3, h4 {
     justify-content: space-between;
     align-items: center;
 }
-.logo {
-    color: white;
-    margin: 0;
-}
-.nav-link {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: 600;
-}
+.logo { color: white; margin: 0; }
+.nav-link { color: white; text-decoration: none; margin-left: 20px; font-weight: 600; }
 
-/* ANA DÜZEN - İki Sütunlu Yapı */
+/* ANA DÜZEN */
 .main-container {
     max-width: 1200px;
     margin: 30px auto;
     padding: 0 20px;
     display: flex;
-    gap: 30px; /* Sütunlar arası boşluk */
+    gap: 30px; 
 }
 
 /* İçerik ve Sidebar Kart Stilleri */
 .content-card, .sidebar-card {
     background-color: var(--card-bg);
     padding: 30px;
-    border-radius: 10px; /* Modern yuvarlak köşeler */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Yumuşak gölge */
+    border-radius: 10px; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); 
 }
 
 /* SOL SÜTUN - İçerik Alanı */
 #content {
-    flex: 3; /* İçeriğe daha fazla alan */
+    flex: 3; 
     min-height: 600px;
-}
-#content p, #content ul, #content ol {
-    margin-bottom: 1.5em;
+    /* Okuma kolaylığı için metin genişliği */
+    max-width: 800px; 
 }
 
 /* SAĞ SÜTUN - Sidebar/Eser Listesi */
 #sidebar {
-    flex: 1; /* Sidebar daha dar */
+    flex: 1; 
     max-width: 300px;
 }
 #post-list-container {
@@ -83,47 +74,73 @@ h1, h2, h3, h4 {
     padding: 0;
 }
 
-/* Sidebar Eser Linki Stili */
+/* Sidebar Eser Linki Stilleri (Hata düzeltmeleri) */
 .post-item {
-    padding: 10px 0;
+    display: block; /* Yazıların alt alta gelmesini sağlar */
+    padding: 10px 10px; 
+    margin-bottom: 5px; 
     border-bottom: 1px solid #eee;
     cursor: pointer;
     font-weight: 600;
-    transition: color 0.2s, background-color 0.2s;
+    transition: all 0.2s;
+    line-height: 1.3;
 }
-
+.post-item:last-child {
+    border-bottom: none;
+}
 .post-item:hover {
-    color: var(--secondary-color); /* Turuncu vurgu */
-    background-color: #fffaf0; /* Hafif bir hover efekti */
-    padding-left: 5px;
+    color: var(--primary-color);
+    background-color: #fffaf0; 
+    padding-left: 15px; /* Hafif bir kayma efekti */
 }
 
+/* Aktif yazı stili */
+.post-item.active {
+    color: white; 
+    background-color: var(--primary-color); 
+    font-weight: 700;
+    padding-left: 15px; 
+    border-radius: 5px;
+}
+.post-item.active:hover {
+    color: white; 
+    background-color: var(--primary-color);
+}
+
+/* Arama Kutusu Stilleri */
 .arama-kutusu {
-    margin-top: 20px;
     display: flex;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden; /* Input ve butonun köşeleri için */
 }
 .arama-input {
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
+    border: none;
     flex-grow: 1;
+    font-size: 1em;
 }
 .arama-button {
     background-color: var(--secondary-color);
     color: white;
     border: none;
     padding: 8px 12px;
-    border-radius: 0 5px 5px 0;
     cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.2s;
 }
+.arama-button:hover {
+    background-color: #ff9800;
+}
+
 
 /* RESPONSIVE DÜZEN - Mobil Uyum */
 @media (max-width: 900px) {
     .main-container {
-        flex-direction: column; /* Sütunları alt alta diz */
+        flex-direction: column; 
     }
     #sidebar {
         max-width: 100%;
-        order: -1; /* Sidebar'ı mobil görünümde üste taşı */
+        order: -1; 
     }
 }
