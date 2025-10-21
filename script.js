@@ -1,40 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Marked.js kütüphanesini kullanıyoruz
     const mdParser = window.marked;
     const contentArea = document.getElementById('content');
     const postListContainer = document.getElementById('post-list-container');
-    const searchInput = document.querySelector('.arama-input');
+    const yazarFiltreSelect = document.getElementById('yazar-filtre');
+    const siralaSelect = document.getElementById('sirala-secim');
+    const filtreButton = document.getElementById('filtre-button');
 
-    let allPosts = []; // Tüm yazıları burada tutacağız (Arama için gerekli)
+    let allPosts = []; // Tüm yazıları burada tutacağız
 
-    // posts.json'ı yükleyen ve sidebar'ı oluşturan ana fonksiyon
+    // posts.json'ı yükleyen ana fonksiyon
     async function loadPosts() {
         try {
-            // Düzeltilmiş doğru dosya yolu: 'post/posts.json'
             const response = await fetch('post/posts.json');
             
             if (!response.ok) {
                 throw new Error(`HTTP Hata kodu: ${response.status}`);
             }
 
-            allPosts = await response.json(); // Tüm yazıları global değişkene ata
+            allPosts = await response.json(); 
 
-            // 1. Yazıları tarihe göre sırala (En yeni en üstte)
-            allPosts.sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+            // Benzersiz Yazarları topla ve drop-down menüye ekle
+            populateAuthorFilter(allPosts);
+            
+            // İlk yüklemede varsayılan sıralama ile listeyi göster
+            const sortedPosts = sortPosts(allPosts, 'tarih_yeni');
+            renderPostList(sortedPosts);
 
-            // Sidebar'ı oluştur
-            renderPostList(allPosts);
-
-            // 3. Opsiyonel: Site açıldığında en yeni yazıyı otomatik yükle
-            if (allPosts.length > 0) {
-                const firstPost = allPosts[0];
+            // Site açıldığında en yeni yazıyı otomatik yükle
+            if (sortedPosts.length > 0) {
+                const firstPost = sortedPosts[0];
                 renderPost(firstPost.dosyaAdi, firstPost.baslik, firstPost.yazar, firstPost.tarih);
-                // İlk listeye aktif sınıfı ekle
-                postListContainer.querySelector('.post-item').classList.add('active');
+                if (postListContainer.querySelector('.post-item')) {
+                     postListContainer.querySelector('.post-item').classList.add('active');
+                }
             }
-
-            // 4. Arama Çubuğunu Aktif Et
-            setupSearch();
+            
+            // Filtreleme butonuna tıklama olayını bağla
+            filtreButton.addEventListener('click', applyFiltersAndSorting);
 
         } catch (error) {
             console.error('Yazılar yüklenirken bir hata oluştu:', error);
@@ -42,9 +44,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // Benzersiz Yazarları select menüye ekler
+    function populateAuthorFilter(posts) {
+        const yazarlar = new Set();
+        posts.forEach(post => yazarlar.add(post.yazar));
+        
+        yazarlar.forEach(yazar => {
+            const option = document.createElement('option');
+            option.value = yazar;
+            option.textContent = yazar;
+            yazarFiltreSelect.appendChild(option);
+        });
+    }
+
+    // Filtreleri uygulayıp sıralamayı yapan ana fonksiyon
+    function applyFiltersAndSorting() {
+        const secilenYazar = yazarFiltreSelect.value;
+        const siralaTuru = siralaSelect.value;
+        
+        let filtrelenmisYazilar = allPosts;
+        
+        // 1. Yazara Göre Filtrele
+        if (secilenYazar !== 'Tümü') {
+            filtrelenmisYazilar = allPosts.filter(post => post.yazar === secilenYazar);
+        }
+        
+        // 2. Sıralamayı Uygula
+        const finalPosts = sortPosts(filtrelenmisYazilar, siralaTuru);
+        
+        // 3. Listeyi Güncelle
+        renderPostList(finalPosts);
+    }
+    
+    // Sıralama mantığını içeren fonksiyon
+    function sortPosts(posts, type) {
+        // Kopyayı sırala ki orijinal liste bozulmasın
+        const sorted = [...posts]; 
+
+        switch (type) {
+            case 'tarih_yeni':
+                return sorted.sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+            case 'tarih_eski':
+                return sorted.sort((a, b) => new Date(a.tarih) - new Date(b.tarih));
+            case 'alfabetik_az':
+                return sorted.sort((a, b) => a.baslik.localeCompare(b.baslik, 'tr', { sensitivity: 'base' }));
+            case 'alfabetik_za':
+                return sorted.sort((a, b) => b.baslik.localeCompare(a.baslik, 'tr', { sensitivity: 'base' }));
+            default:
+                return sorted; // Varsayılan
+        }
+    }
+
     // Sidebar'a yazı listesini render eden yardımcı fonksiyon
     function renderPostList(postsToRender) {
-        postListContainer.innerHTML = ''; // Listeyi temizle
+        postListContainer.innerHTML = ''; 
         
         postsToRender.forEach(post => {
             const listItem = document.createElement('li');
@@ -52,39 +105,25 @@ document.addEventListener('DOMContentLoaded', () => {
             listItem.textContent = post.baslik;
             
             listItem.addEventListener('click', (e) => {
-                // Tıklanan yazıyı yükle
                 renderPost(post.dosyaAdi, post.baslik, post.yazar, post.tarih);
-                
-                // Aktif olan öğeyi görsel olarak vurgula
                 document.querySelectorAll('.post-item').forEach(item => item.classList.remove('active'));
                 e.currentTarget.classList.add('active');
             });
             
             postListContainer.appendChild(listItem);
         });
+        
+        // Filtreleme sonrası listedeki ilk öğeyi aktif yap (görsel tutarlılık için)
+        if (postListContainer.firstChild) {
+            postListContainer.firstChild.classList.add('active');
+        }
     }
 
-    // Arama Çubuğu Fonksiyonu
-    function setupSearch() {
-        searchInput.addEventListener('input', (e) => {
-            const aramaTerimi = e.target.value.toLowerCase().trim();
 
-            const filtrelenmisYazilar = allPosts.filter(post => 
-                // Başlık veya yazar adında arama yap
-                post.baslik.toLowerCase().includes(aramaTerimi) ||
-                post.yazar.toLowerCase().includes(aramaTerimi) 
-            );
-
-            // Filtrelenmiş yazıları render et
-            renderPostList(filtrelenmisYazilar);
-        });
-    }
-
-    // Seçilen Markdown dosyasını çekip render eden fonksiyon
+    // Seçilen Markdown dosyasını çekip render eden fonksiyon (Önceki kodla aynı)
     async function renderPost(fileName, baslik, yazar, tarih) {
         
         try {
-            // Markdown dosyaları da 'post/' klasöründe olmalı
             const response = await fetch(`post/${fileName}`);
             
             if (!response.ok) {
@@ -92,11 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const markdownText = await response.text();
-
-            // Markdown'ı HTML'e çevir
             const htmlContent = mdParser.parse(markdownText);
             
-            // İçerik alanını yeni HTML ile doldur
             contentArea.innerHTML = `
                 <h2 class="post-title">${baslik}</h2>
                 <div class="post-meta">
@@ -107,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="post-body">${htmlContent}</div>
             `;
             
-            // Sayfanın başına kaydır
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (error) {
