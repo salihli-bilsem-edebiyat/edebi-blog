@@ -17,8 +17,7 @@
         <div class="header-container">
             <h1 class="logo">Edebi Blog</h1>
             <nav class="nav">
-                <a href="#" class="nav-link">Hikayeler</a>
-                <a href="#" class="nav-link">Şiirler</a>
+                <a href="#" class="nav-link">Arşiv</a>
             </nav>
         </div>
     </header>
@@ -30,15 +29,33 @@
         </section>
 
         <aside id="sidebar" class="sidebar-card">
-            <h3>Tüm Eserler</h3>
+            <h3>Filtreleme ve Sıralama</h3>
             
-            <div class="arama-kutusu">
-                <input type="text" placeholder="Eserde ara..." class="arama-input">
-                <button class="arama-button">🔍</button>
+            <div class="filtre-alanlari">
+                
+                <div class="filtre-grup">
+                    <label for="yazar-filtre">Yazar:</label>
+                    <select id="yazar-filtre">
+                        <option value="Tümü">Tüm Yazarlar</option>
+                    </select>
+                </div>
+                
+                <div class="filtre-grup">
+                    <label for="sirala-secim">Sıralama:</label>
+                    <select id="sirala-secim">
+                        <option value="tarih_yeni">Tarih (En Yeni)</option>
+                        <option value="tarih_eski">Tarih (En Eski)</option>
+                        <option value="alfabetik_az">Başlık (A-Z)</option>
+                        <option value="alfabetik_za">Başlık (Z-A)</option>
+                    </select>
+                </div>
+                
+                <button id="filtre-button" class="filtre-button">Filtrele</button>
             </div>
             
             <hr style="margin: 15px 0; border-color: #f0f0f0;">
 
+            <h3>Tüm Eserler</h3>
             <ul id="post-list-container">
                 </ul>
         </aside>
