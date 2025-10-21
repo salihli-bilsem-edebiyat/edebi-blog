@@ -3,37 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Öğrenci Yazıları Blogu</title>
+    <title>Edebi Blog - Hocanızın Köşesi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Öğrenci Yazıları Blogu</h1>
-        <p>Edebiyatın büyülü dünyasına hoş geldiniz!</p>
-    </header>
-    <main>
-        <div class="container">
-            <!-- Sağdaki küçük alan: Blog listesi -->
-            <aside id="blog-list">
-                <h2>Bloglar</h2>
-                <ul id="blog-links">
-                    <!-- Blog bağlantıları dinamik olarak buraya eklenecek -->
-                </ul>
-            </aside>
 
-            <!-- Soldaki büyük alan: Seçilen yazı -->
-            <section id="blog-content">
-                <!-- Varsayılan olarak en son eklenen yazı burada görüntülenecek -->
-                <article id="content">
-                    <p>Yükleniyor...</p>
-                </article>
-            </section>
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo">Edebi Blog</h1>
+            <nav class="nav">
+                <a href="#" class="nav-link">Hikayeler</a>
+                <a href="#" class="nav-link">Şiirler</a>
+                <a href="#" class="nav-link">Yazarlar</a>
+            </nav>
         </div>
+    </header>
+
+    <main class="main-container">
+        <section id="content" class="content-card">
+            <h2>Lütfen Bir Eser Seçin</h2>
+            <p>Sağ taraftaki listeden dilediğiniz eseri seçerek okumaya başlayabilirsiniz.</p>
+        </section>
+
+        <aside id="sidebar" class="sidebar-card">
+            <h3>Tüm Eserler</h3>
+            <ul id="post-list-container">
+                </ul>
+
+            <div class="arama-kutusu">
+                <input type="text" placeholder="Eserde ara..." class="arama-input">
+                <button class="arama-button">🔍</button>
+            </div>
+        </aside>
     </main>
-    <footer>
-        <p>© 2025 Öğrenci Yazıları Blogu | Tüm Hakları Saklıdır</p>
-    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
